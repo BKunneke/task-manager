@@ -8,14 +8,20 @@ const port = process.env.port || 3000
 
 app.use(express.json()) // Turns the request body into a json object
 
-app.post('/users', (req, res) => {
+app.post('/users', async (req, res) => {
     const user = new User(req.body)
 
-    user.save().then(() => {
-        res.send(user)
-    }).catch((e) => {
+    try {
+        await user.save()
+        res.status(201).send(user)
+    } catch (e) {
         res.status(400).send(e)
-    })
+    }
+    // user.save().then(() => {
+    //     res.send(user)
+    // }).catch((e) => {
+    //     res.status(400).send(e)
+    // })
 })
 
 app.get('/users', (req, res) => {
